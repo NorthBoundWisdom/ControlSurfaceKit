@@ -16,6 +16,6 @@
    new adapter may use existing host infrastructure without adding kernel device
    branches. Hardware qualification is a separate, user-arranged activity.
 
-J-1 supplies package boundaries only. Neutral contract mapping, shared scenario
-format, and a minimal test adapter follow in J-2; reducer adoption follows in J-3.
-No checkmark here claims those later stages are already implemented.
+J-2 supplies neutral contracts, the unchanged scenario format and a minimal
+stateless test adapter. See new-device-example.md for the evidence limits.
+Binding/connection reducer adoption follows in J-3, and is not yet implemented.

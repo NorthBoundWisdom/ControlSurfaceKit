@@ -3,9 +3,10 @@
 Deterministic, device-neutral building blocks for control-surface adapters.
 NorthBoundWisdom · MIT · Swift 6 · Foundation only · macOS and Linux.
 
-J-1 establishes the package and mechanically checked boundaries. No host has
-adopted kernel behavior yet. Context, connection and feedback targets deliberately
-contain boundary markers only; their reducers must first pass host shadow runs.
+J-2 adds immutable device-neutral contracts and test-support scenario assets.
+Host adoption is tracked by the workspace review, not inferred from this package.
+Context, connection and feedback targets deliberately contain boundary markers
+only; their reducers must first pass host shadow runs.
 
 | Target | Responsibility | May depend on |
 | --- | --- | --- |
@@ -27,7 +28,9 @@ device-specific policies. The host supplies monotonic time and serial ownership.
 Device touch/layer/motor/preset safety is mandatory adapter logic, not optional
 kernel switches. See [adapter integration](docs/new-device.md).
 
-Run the whole check set with `python3 -B scripts/check.py`. The boundary checker
+Prepare the schema-check environment once with `python3 -m venv build/schema-validation`
+and `build/schema-validation/bin/python -m pip install jsonschema`. Run the whole
+check set with `build/schema-validation/bin/python -B scripts/check.py`. The boundary checker
 reads the evaluated SwiftPM manifest and the Swift parser AST, then applies source
 rules. Its negative fixtures are tested separately. It is a guardrail, not a proof
 of semantic purity; review and differential evidence are still required.
@@ -41,3 +44,11 @@ exact remote SHA's CI before dependent locks advance. The remote is
 `https://github.com/NorthBoundWisdom/ControlSurfaceKit.git`, created by the user.
 The initial remote commit is preserved; pushes require supervisor review and
 exact-SHA CI.
+
+See [field-by-field contract mapping and shadow procedure](docs/neutral-contract-mapping.md),
+[unchanged scenario interface](docs/controller-regression.md),
+[original-asset hashes/test mapping](docs/scenario-asset-manifest.json), and
+[new-device paper example and current evidence limits](docs/new-device-example.md).
+Caller code supplies fixture `Data`; production Sources never load files/resources.
+The unchanged Python validator remains the full closed-schema/reference authority.
+The Swift typed reader and exact assertion/trace helpers add no ideal host reducer.

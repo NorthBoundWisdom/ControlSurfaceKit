@@ -10,6 +10,9 @@ started = time.monotonic()
 commands = [
     [sys.executable, "-B", "scripts/check_boundaries.py"],
     [sys.executable, "-B", "-m", "unittest", "discover", "-s", "scripts/tests", "-v"],
+    [sys.executable, "-B", "-m", "unittest", "discover", "-s", "clients/python/tests", "-v"],
+    [sys.executable, "-B", "scripts/validate_controller_regression.py"],
+    [sys.executable, "-B", "scripts/validate_controller_regression_schemas.py"],
     ["swift", "test", "--build-path", "build/swiftpm"],
 ]
 for command in commands:

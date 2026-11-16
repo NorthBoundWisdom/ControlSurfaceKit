@@ -1,0 +1,75 @@
+{
+  "source_repository": "NorthBoundWisdom/SurfacePlugins",
+  "source_revision": "83247ee4a70ed9e366e8653137e5f762144b294d",
+  "files": [
+    {
+      "path": "fixtures/controller-regression-v1.json",
+      "sha256": "546fbc2a6f1d20f9e116a91558f4dd67891bfaba797b9778e85d975fe4cd3384",
+      "bytes": 112817,
+      "physical_lines": 4467
+    },
+    {
+      "path": "docs/controller-regression.schema.json",
+      "sha256": "ab1d24b32c54b551f94ffcebd983c7f261042e929a164c38983e0587b09f97b2",
+      "bytes": 83711,
+      "physical_lines": 2377
+    },
+    {
+      "path": "docs/controller-regression-results.schema.json",
+      "sha256": "b6801584639f3241376b51d8a8b1fca9dd6af11ea15ba664f3376ecb4d214443",
+      "bytes": 30281,
+      "physical_lines": 1240
+    },
+    {
+      "path": "scripts/validate_controller_regression.py",
+      "sha256": "77a52fcf38300201055b1dd52342bbd7249e50ec78dbf670bba18630e5040721",
+      "bytes": 14814,
+      "physical_lines": 266
+    },
+    {
+      "path": "scripts/validate_controller_regression_schemas.py",
+      "sha256": "32542d9a227020bd89a5246e778845ddb20ca20534a26943bf94ae873a60e61b",
+      "bytes": 756,
+      "physical_lines": 14
+    },
+    {
+      "path": "clients/python/tests/test_controller_regression.py",
+      "sha256": "3b47b9a7ca6b79fcd014997fbaee248bbe68c67c2997422f88ebcb238946ce45",
+      "bytes": 16465,
+      "physical_lines": 280
+    },
+    {
+      "path": "docs/controller-regression.md",
+      "sha256": "4ad53a24bb35ce61ea911bd38dc22b5614b0edb87b8f4df0cdde52c0745336b9",
+      "bytes": 9828,
+      "physical_lines": 134
+    }
+  ],
+  "test_method_count": 24,
+  "test_methods": [
+    "test_inventory_is_exactly_thirty_scenarios_and_seventy_eight_steps",
+    "test_only_T17_binds_the_second_physical_fader_to_the_shared_parameter",
+    "test_T29_alone_distinguishes_old_and_new_page_parameter_values",
+    "test_T29_incorrect_projection_cannot_claim_pass_but_remains_a_valid_failure",
+    "test_touch_plan_revocation_is_separate_from_IO_and_deferred_intent",
+    "test_plan_counts_cannot_be_negative_fractional_boolean_or_IO",
+    "test_absent_prepared_plan_or_no_actual_revocation_cannot_claim_pass",
+    "test_fixture_rejects_duplicate_ids_and_dangling_references",
+    "test_closed_shapes_reject_host_addresses_unknown_operations_and_fake_metrics",
+    "test_simulation_operations_cannot_target_a_hardware_instance",
+    "test_final_assertions_cannot_be_silently_removed",
+    "test_loader_rejects_duplicate_keys_and_nonfinite_numbers",
+    "test_schema_numeric_equality_preserves_boolean_distinction",
+    "test_unknown_schema_keywords_are_rejected",
+    "test_valid_envelope_does_not_turn_thirty_failures_into_conformance_success",
+    "test_report_rejects_wrong_hash_missing_rows_or_missing_steps",
+    "test_missing_gui_authority_and_journal_implementations_cannot_claim_NA",
+    "test_T25_still_executes_journal_when_motor_step_is_not_applicable",
+    "test_T14_accepts_real_local_wire_unit_unchanged_with_value_reprojection",
+    "test_T14_style_only_or_rejected_projection_cannot_increment_accepted_value_counter",
+    "test_value_projection_requires_display_kind",
+    "test_false_pass_missing_observation_and_copied_semantic_sent_cache_are_rejected",
+    "test_row_summary_cannot_claim_pass_when_a_step_failed",
+    "test_cli_reports_validation_and_conformance_separately"
+  ]
+}

@@ -19,6 +19,8 @@ let package = Package(
         .target(name: "SurfaceFeedbackPlanning", dependencies: ["SurfaceConnectionState"]),
         .target(name: "SurfaceDeviceConformance", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState", "SurfaceFeedbackPlanning"]),
         .testTarget(name: "ArchitectureTests", dependencies: ["SurfaceDeviceConformance"]),
+        .testTarget(name: "DeviceContractTests", dependencies: ["SurfaceDeviceContracts"]),
+        .testTarget(name: "ConformanceTests", dependencies: ["SurfaceDeviceContracts", "SurfaceDeviceConformance"]),
     ],
     swiftLanguageModes: [.v6]
 )

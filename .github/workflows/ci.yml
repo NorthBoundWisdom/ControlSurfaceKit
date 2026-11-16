@@ -16,7 +16,8 @@ jobs:
           path: build/swiftpm
           key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}
           restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
-      - run: python3 -B scripts/check.py
+      - run: python3 -m venv build/schema-validation && build/schema-validation/bin/python -m pip install jsonschema
+      - run: build/schema-validation/bin/python -B scripts/check.py
       - uses: actions/cache/save@v6.1.0
         if: success() && github.event_name == 'push'
         with:
@@ -42,7 +43,8 @@ jobs:
           path: build/swiftpm
           key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}
           restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
-      - run: python3 -B scripts/check.py
+      - run: python3 -m venv build/schema-validation && build/schema-validation/bin/python -m pip install jsonschema
+      - run: build/schema-validation/bin/python -B scripts/check.py
       - uses: actions/cache/save@v6.1.0
         if: success() && github.event_name == 'push'
         with:
