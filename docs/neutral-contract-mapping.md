@@ -4,6 +4,8 @@ These are immutable fact/plan types, not a new runtime or authority. Device type
 remain in their adapters. The tables cover fields in the proposal's contract
 files, plus the endpoint and monitor facts added in J-0. Host integration adds its
 own exact bridge/source references; no table row means host adoption has occurred.
+The C adapter owner read and accepted its Models/connection/monitor field inventory
+and supplied the headless endpoint/event rows below during J-2.
 
 ## Common destination vocabulary
 
@@ -52,7 +54,10 @@ own exact bridge/source references; no table row means host adoption has occurre
 | `MIDIEndpointSelection.version/sourceID/destinationID` | Persistence and explicit endpoint selection stay adapter |
 | `MonitorEvent.id/time/monotonicTime` | Diagnostic event ID/wall time stay adapter; only actual finite monotonic time supplies `at` |
 | `.direction/source/message/control` | direction selects input/observation/transmission record; explicit source projects; message/control decoded by adapter |
-| `.ignored/origin/delivery/endpoint` | Real decision/reason goes to shadow trace; writer origin stays runtime; delivery becomes transport evidence without promoting sent to observed; endpoint projects captured provenance |
+| `.ignored/origin/delivery/endpoint` | Real decision/reason goes to shadow trace; writer origin stays runtime; only actual I/O delivery becomes transport evidence; pre-I/O suppression remains a decision; endpoint projects captured provenance |
+
+The adapter-owner-reviewed expanded per-field inventory is in
+[bcr-adapter-field-map.md](bcr-adapter-field-map.md).
 
 ## X-Touch Compact adapter field map
 
@@ -76,9 +81,16 @@ own exact bridge/source references; no table row means host adoption has occurre
 | `CompactEndpointStamp.endpoint/generation` | optional captured endpoint and `connectionGeneration`; no current-route backfill |
 | `CompactMIDIInputEnvelope.messages/origin` | decode messages into neutral input, preserving original origin stamp |
 | `CompactMIDIConnection.generation/inputs/outputs/connectedInput/connectedOutput/error/isConnected` | route generation projects captured stamp; inventory/selection/error/connection lifecycle ownership stay adapter |
+| `HardwareEndpointOrigin.inputID/outputID` | Independent input/output `EndpointProvenance.endpointID` projections, nil remains nil |
+| `.connectionGeneration/transportOrigin` | Exact generation and explicit declared origin; unknown remains unknown and does not infer a device ID |
+| `HardwareMIDIEvent.link(connected,origin)` | Lifecycle fact with captured endpoint; no neutral input or output is invented |
+| `.message(message,origin)` | Device decoder produces input facts with the original endpoint stamp |
+| `.undecoded(origin)` | Adapter-visible rejection/diagnostic, never a fabricated input value |
+| `HardwareMIDI.currentOrigin` | Adapter route pin only, not a source to backfill old events |
+| `.send(HardwareDisplayMessage,expectedOrigin)` | Immutable display target/payload and captured endpoint; actual transport result becomes evidence, not observation |
 | `MonitorEvent.id/timestamp/direction/source/message/control` | UUID/wall time stay diagnostic; direction/source selects neutral record; message/control stays decoder input |
 | `.hostLayer/deviceLayer` | Adapter interprets both; neutral context never equates inferred and observed layer |
-| `.delivery/ignored` | actual transport evidence / actual decision with reason; not a new rule |
+| `.delivery/ignored` | actual I/O result becomes transport evidence; pre-I/O suppression and ignored input remain decisions with reasons |
 | `.text/connection/nonMotorTest/endpointOrigin` | wording/connection diagnostics/device-specific audit remain adapter; captured endpoint origin projects |
 
 ## Stepwise shadow contract
@@ -88,7 +100,9 @@ endpoint identity/generation facts, ordered pending/revoked queue item IDs,
 observations, full feedback descriptors with payload, transport outcomes and
 opaque transport sequence. The comparator checks all fields with exact equality.
 Array order and duplicate revocation multiplicity are retained; a missing step
-is a difference. Empty lists are correct only when the real path has no entries.
+is a difference. Pre-I/O suppression has no transmission evidence; an actual
+transport attempt is recorded separately from its accepted/rejected result. Empty
+lists are correct only when the real path has no entries.
 
 Hosts must capture both sides from the same input and supplied time, before any
 mutation caused by the next step. Candidate contract projection must be decoded
