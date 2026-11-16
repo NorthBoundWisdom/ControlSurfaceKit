@@ -1,0 +1,50 @@
+name: Checks
+on: [push, pull_request]
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/restore_git_mtimes.py
+      - name: Identify toolchain
+        run: python3 -c "import hashlib, subprocess; v = subprocess.run(['swift', '--version'], capture_output=True); print('SWIFT_ID=' + hashlib.sha256(v.stdout + v.stderr).hexdigest()[:16])" >> "$GITHUB_ENV"
+      - uses: actions/cache/restore@v6.1.0
+        with:
+          path: build/swiftpm
+          key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}
+          restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
+      - run: python3 -B scripts/check.py
+      - uses: actions/cache/save@v6.1.0
+        if: success() && github.event_name == 'push'
+        with:
+          path: build/swiftpm
+          key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    container: swift:6.2-noble
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: python3 scripts/restore_git_mtimes.py
+      - name: Identify toolchain
+        run: python3 -c "import hashlib, subprocess; v = subprocess.run(['swift', '--version'], capture_output=True); print('SWIFT_ID=' + hashlib.sha256(v.stdout + v.stderr).hexdigest()[:16])" >> "$GITHUB_ENV"
+      - uses: actions/cache/restore@v6.1.0
+        with:
+          path: build/swiftpm
+          key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}
+          restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
+      - run: python3 -B scripts/check.py
+      - uses: actions/cache/save@v6.1.0
+        if: success() && github.event_name == 'push'
+        with:
+          path: build/swiftpm
+          key: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ github.sha }}

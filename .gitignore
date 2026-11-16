@@ -1,0 +1,22 @@
+.build/
+build/
+.swiftpm/
+.DS_Store
+__pycache__/
+*.pyc
+
+# Editor state and backups
+.vscode/
+.idea/
+*.swp
+*~
+
+# Credentials and local environment (never commit secrets)
+.env
+.env.*
+*.token
+*.pem
+*.key
+/credentials.json
+/.credentials/
+/build.local.json
