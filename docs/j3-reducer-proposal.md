@@ -24,6 +24,12 @@ original evidence is in workspace `build/j-main-cont/k/`.
   still reject their previously illegal configurations. Complex action payloads
   and SurfacePlugins references resolve the sole native configuration; there is
   no second parameter or action-definition store.
+- J3 first concentrated revision adds a separate ControlBinding/configuration
+  lookup without an InputKind. Native control-level assignment lookup must use
+  it rather than fabricating an event role. Both independent indexes keep
+  first-match order and no cross-index fallback; context transitions observe
+  changes in either ordered entry collection. Existing role-specific APIs keep
+  their meaning.
 - ContextResourceIndex owns actual ordered IDs and captured scope. One host
   removes its native scheduler order array; the other removes its corresponding
   pending and cache-validity ID owners. Native payload dictionaries remain sole

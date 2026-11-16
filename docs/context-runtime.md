@@ -10,6 +10,14 @@ callbacks, parameter values, senders or observations in these reducers.
    Build `ContextBinding` entries in the native lookup order. `BindingContext`
    builds the lookup index once; the first matching entry wins. Device validation
    runs before this bridge. No action payload or parameter definition is copied.
+   For a configuration-level control lookup that does not depend on an input
+   role, use `ControlBinding(elementID:facetID:targetReferenceID:)` and
+   `BindingContext(context:controlEntries:)`, then `targetForControl`. This
+   separate index declares no event capability. Never attach a fabricated
+   InputKind to a configuration merely to obtain a lookup key. Role-specific
+   entries and control-level entries can coexist through
+   `BindingContext(context:entries:controlEntries:)`; each preserves its own
+   first-match order, and neither lookup falls back to the other.
 2. A stable lifecycle `DeviceContext`, with input epoch and mapping revision
    preserved as separate identities. `BindingContextState.apply` reports context
    and binding changes and keeps the exact supplied identity; it never mints one.
