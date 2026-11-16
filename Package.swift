@@ -16,11 +16,12 @@ let package = Package(
         .target(name: "SurfaceDeviceContracts"),
         .target(name: "SurfaceBindingContext", dependencies: ["SurfaceDeviceContracts"]),
         .target(name: "SurfaceConnectionState", dependencies: ["SurfaceBindingContext"]),
-        .target(name: "SurfaceFeedbackPlanning", dependencies: ["SurfaceConnectionState"]),
+        .target(name: "SurfaceFeedbackPlanning", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState"]),
         .target(name: "SurfaceDeviceConformance", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState", "SurfaceFeedbackPlanning"]),
         .testTarget(name: "ArchitectureTests", dependencies: ["SurfaceDeviceConformance"]),
         .testTarget(name: "DeviceContractTests", dependencies: ["SurfaceDeviceContracts"]),
         .testTarget(name: "ContextRuntimeTests", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState"]),
+        .testTarget(name: "FeedbackPlanningTests", dependencies: ["SurfaceDeviceContracts", "SurfaceFeedbackPlanning"]),
         .testTarget(name: "ConformanceTests", dependencies: ["SurfaceDeviceContracts", "SurfaceDeviceConformance"]),
     ],
     swiftLanguageModes: [.v6]

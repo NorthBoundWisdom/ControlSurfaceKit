@@ -28,8 +28,12 @@
 
 J-2 supplies neutral contracts, the unchanged scenario format and a minimal
 stateless test adapter. See new-device-example.md for the evidence limits.
-Binding/connection reducer adoption follows in J-3, and is not yet implemented.
+J-3 implements binding lookup, semantic scope, connection transitions and scoped
+resource ownership; see [context integration](context-runtime.md). J-4 adds
+complete immutable plans, explicit stage/full native proof and actual receipt
+facts; see [feedback integration](feedback-runtime.md). Their implementation in
+the library does not by itself prove a host's shadow/cutover or final J5 matrix.
 
 These identity/facet rules apply to J-2 neutral integration. Host adoption and
 exact pins are tracked in the supervisor's workspace review. They do not rename
-published control IDs, change legacy bindings or implement J-3 algorithms.
+published control IDs or change legacy bindings.

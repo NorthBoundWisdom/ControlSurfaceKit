@@ -17,7 +17,7 @@ DAG = {
     "SurfaceDeviceContracts": set(),
     "SurfaceBindingContext": {"SurfaceDeviceContracts"},
     "SurfaceConnectionState": {"SurfaceBindingContext"},
-    "SurfaceFeedbackPlanning": {"SurfaceConnectionState"},
+    "SurfaceFeedbackPlanning": {"SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState"},
     "SurfaceDeviceConformance": {"SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState", "SurfaceFeedbackPlanning"},
 }
 CONFORMANCE = "SurfaceDeviceConformance"

@@ -115,6 +115,27 @@ class ManifestBoundaryTests(unittest.TestCase):
     def test_actual_manifest_is_allowed(self):
         self.assertEqual(boundary.check_manifest(self.manifest), [])
 
+    def test_feedback_direct_earlier_edges_are_explicit(self):
+        target = next(t for t in self.manifest["targets"] if t["name"] == "SurfaceFeedbackPlanning")
+        self.assertEqual({boundary.dependency_name(d) for d in target["dependencies"]},
+                         {"SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState"})
+
+    def test_feedback_cannot_omit_its_required_contract_edge(self):
+        value = self.modified()
+        target = next(t for t in value["targets"] if t["name"] == "SurfaceFeedbackPlanning")
+        target["dependencies"] = [d for d in target["dependencies"] if boundary.dependency_name(d) != "SurfaceDeviceContracts"]
+        self.assertTrue(boundary.check_manifest(value))
+
+    def test_binding_cannot_point_forward_to_feedback(self):
+        value = self.modified()
+        next(t for t in value["targets"] if t["name"] == "SurfaceBindingContext")["dependencies"].append({"byName": ["SurfaceFeedbackPlanning", None]})
+        self.assertTrue(boundary.check_manifest(value))
+
+    def test_connection_cannot_form_a_cycle_with_feedback(self):
+        value = self.modified()
+        next(t for t in value["targets"] if t["name"] == "SurfaceConnectionState")["dependencies"].append({"byName": ["SurfaceFeedbackPlanning", None]})
+        self.assertTrue(boundary.check_manifest(value))
+
     def test_evaluated_manifest_order_is_irrelevant(self):
         value = self.modified()
         value["targets"].reverse()
@@ -164,3 +185,48 @@ class ManifestBoundaryTests(unittest.TestCase):
         value = self.modified()
         value["targets"][0]["pluginUsages"] = [{"plugin": ["Generator", None]}]
         self.assertTrue(boundary.check_manifest(value))
+
+
+class FeedbackImportBoundaryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.directory = tempfile.TemporaryDirectory()
+        root = Path(cls.directory.name)
+        cls.sources = {
+            "earlier": "import SurfaceDeviceContracts\nimport SurfaceBindingContext\nimport SurfaceConnectionState\n",
+            "conformance": "import SurfaceDeviceConformance\n",
+            "native": "import CoreMIDI\n",
+            "business": "import SurfacePluginContracts\n",
+            "feedback": "import SurfaceFeedbackPlanning\n",
+        }
+        cls.paths = {}
+        for name, source in cls.sources.items():
+            path = root / (name + ".swift")
+            path.write_text(source)
+            cls.paths[name] = path
+        cls.parsed = boundary.parse_files(list(cls.paths.values()))
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.directory.cleanup()
+
+    def errors(self, name, target):
+        path = self.paths[name]
+        return boundary.check_source(path.read_text(), self.parsed[str(path)], target, path.name)
+
+    def test_feedback_may_import_the_three_approved_earlier_targets(self):
+        self.assertEqual(self.errors("earlier", "SurfaceFeedbackPlanning"), [])
+
+    def test_feedback_cannot_import_test_support(self):
+        self.assertTrue(self.errors("conformance", "SurfaceFeedbackPlanning"))
+
+    def test_feedback_cannot_import_native_or_business_modules(self):
+        for name in ["native", "business"]:
+            with self.subTest(module=name):
+                self.assertTrue(self.errors(name, "SurfaceFeedbackPlanning"))
+
+    def test_binding_cannot_import_feedback(self):
+        self.assertTrue(self.errors("feedback", "SurfaceBindingContext"))
+
+    def test_connection_cannot_import_feedback(self):
+        self.assertTrue(self.errors("feedback", "SurfaceConnectionState"))

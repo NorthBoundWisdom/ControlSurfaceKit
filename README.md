@@ -6,16 +6,19 @@ NorthBoundWisdom · MIT · Swift 6 · Foundation only · macOS and Linux.
 J-2 adds immutable device-neutral contracts and test-support scenario assets.
 J-3 adds first-match binding lookup, exact lifecycle scopes, connection transitions
 and ordered scoped resource ownership. See [runtime integration](docs/context-runtime.md).
+J-4 adds immutable feedback plans, explicit stage/full native proof validation and
+actual-attempt receipts. See [feedback integration](docs/feedback-runtime.md).
 Host adoption is tracked by the workspace review, not inferred from this package.
-The feedback target still contains a boundary marker only. Each runtime block
-must pass independent host shadow runs before it controls product behavior.
+Each runtime block must pass independent host shadow runs before it controls
+product behavior. Rate/dedup scheduling remains native pending its separate
+executable shadow/difference report.
 
 | Target | Responsibility | May depend on |
 | --- | --- | --- |
 | SurfaceDeviceContracts | Input, observation, effect and endpoint vocabulary | Foundation |
 | SurfaceBindingContext | Opaque bindings and context invalidation | Contracts |
 | SurfaceConnectionState | Caller-driven value reducer and connection generations | BindingContext |
-| SurfaceFeedbackPlanning | Immutable plans and pre-send validation | ConnectionState |
+| SurfaceFeedbackPlanning | Immutable plans, native proof and receipts | Contracts, BindingContext, ConnectionState |
 | SurfaceDeviceConformance | Scenario data, strict assertions and trace test support | All four, tests only |
 
 This is not a device driver, parameter store, business plugin, remote service,

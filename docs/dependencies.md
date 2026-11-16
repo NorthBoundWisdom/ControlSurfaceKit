@@ -13,9 +13,13 @@ Source guards reject known duplicated authority and quantization patterns;
 review remains necessary to detect renamed semantic reimplementations.
 
 The kernel has five targets, including one test-support library. Production
-targets cannot import or depend on the conformance target. Context/connection/
-feedback targets in J-1 carry only linked boundary markers. No behavioral
-reducer is implemented, shadow-compared or adopted at this stage.
+targets cannot import or depend on the conformance target. J-1 initially used
+boundary markers; J-3 supplies binding/connection values and J-4 supplies feedback
+plan/proof/receipt decisions. Host adoption is recorded independently in the
+workspace review. The supervisor explicitly approved feedback's direct edges to
+the three earlier Contracts/BindingContext/ConnectionState targets for J-4;
+the checker requires exactly those edges and rejects forward/cyclic/test-support
+dependencies. It does not use unverified transitive imports or an SP dependency.
 
 All production source is platform-neutral. Conditional compilation is rejected
 because Swift's parse dump omits inactive branches; platform-specific code
