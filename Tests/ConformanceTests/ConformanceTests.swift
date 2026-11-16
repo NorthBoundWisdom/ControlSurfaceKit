@@ -156,4 +156,57 @@ final class ConformanceTests: XCTestCase {
         XCTAssertEqual(ShadowComparator.compare(reference: [reference], candidate: [changed]).map(\.field), ["feedback"])
     }
 
+    func testStepTraceEncodesFrozenRequiredNullableReasonForEveryStatus() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let schema = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: root.appendingPathComponent("docs/controller-regression-results.schema.json"))) as? [String: Any])
+        var stepSchema: Any = schema
+        for key in ["properties", "results", "items", "properties", "steps", "items"] {
+            stepSchema = try XCTUnwrap((stepSchema as? [String: Any])?[key])
+        }
+        let required = Set(try XCTUnwrap((stepSchema as? [String: Any])?["required"] as? [String]))
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let cases: [(ScenarioStatus, String?)] = [(.pass, nil), (.fail, "denied"), (.notApplicable, "missing_physical_feature")]
+        for (status, reason) in cases {
+            let trace = ScenarioStepTrace(index: 0, operation: "inspect", status: status, reason: reason, before: [:], after: [:], effects: [])
+            let data = try encoder.encode(trace)
+            let object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            if status == .pass {
+                print("REQUIRED_NULLABLE_REASON_PROBE " + String(decoding: data, as: UTF8.self))
+                if let output = ProcessInfo.processInfo.environment["CSK_CODEC_PROBE_OUTPUT"] {
+                    try data.write(to: URL(fileURLWithPath: output))
+                }
+            }
+            XCTAssertEqual(Set(object.keys), required, "Frozen result-step schema requires every key, including reason")
+            if let reason { XCTAssertEqual(object["reason"] as? String, reason) }
+            else { XCTAssertTrue(object["reason"] is NSNull, "A required nil reason must encode as explicit JSON null") }
+            XCTAssertEqual(try JSONDecoder().decode(ScenarioStepTrace.self, from: data), trace)
+        }
+    }
+
+    func testEffectTracePreservesRequiredNullableValueAsExplicitNull() throws {
+        let effect = ScenarioEffectTrace(instanceID: "primary", kinds: [.display], endpoint: "axis.display", value: .null, accepted: true)
+        let encoded = try JSONEncoder().encode(effect)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        XCTAssertTrue(object.keys.contains("value"))
+        XCTAssertTrue(object["value"] is NSNull)
+        XCTAssertEqual(try JSONDecoder().decode(ScenarioEffectTrace.self, from: encoded), effect)
+    }
+
+    func testOpaqueSetupPayloadPreservesRequiredNullableEndpointFields() throws {
+        let catalog = try ScenarioCatalog.decode(data: fixture())
+        let encoded = try JSONEncoder().encode(catalog.scenarios[0].setup)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let controls = try XCTUnwrap(object["controls"] as? [[String: Any]])
+        for control in controls {
+            for key in ["input_endpoint", "feedback_endpoint", "touch_endpoint"] {
+                XCTAssertTrue(control.keys.contains(key), "Required nullable setup field must remain present")
+            }
+        }
+        let meter = try XCTUnwrap(controls.first(where: { $0["id"] as? String == "meter" }))
+        XCTAssertTrue(meter["input_endpoint"] is NSNull)
+        XCTAssertTrue(meter["touch_endpoint"] is NSNull)
+        XCTAssertEqual(try JSONDecoder().decode(ScenarioPayload.self, from: encoded), catalog.scenarios[0].setup)
+    }
+
 }

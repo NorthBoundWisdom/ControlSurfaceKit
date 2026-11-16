@@ -54,6 +54,22 @@ public struct ScenarioStepTrace: Equatable, Sendable, Codable {
         self.effects = effects
     }
 
+    enum CodingKeys: String, CodingKey {
+        case index, operation, status, reason, before, after, effects
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(index, forKey: .index)
+        try container.encode(operation, forKey: .operation)
+        try container.encode(status, forKey: .status)
+        if let reason { try container.encode(reason, forKey: .reason) }
+        else { try container.encodeNil(forKey: .reason) }
+        try container.encode(before, forKey: .before)
+        try container.encode(after, forKey: .after)
+        try container.encode(effects, forKey: .effects)
+    }
+
     public func evaluate(_ assertion: ScenarioAssertion, instanceID: String) throws -> Bool {
         try AssertionEvaluator.evaluate(assertion, instanceID: instanceID, before: before, after: after)
     }
