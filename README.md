@@ -4,9 +4,11 @@ Deterministic, device-neutral building blocks for control-surface adapters.
 NorthBoundWisdom · MIT · Swift 6 · Foundation only · macOS and Linux.
 
 J-2 adds immutable device-neutral contracts and test-support scenario assets.
+J-3 adds first-match binding lookup, exact lifecycle scopes, connection transitions
+and ordered scoped resource ownership. See [runtime integration](docs/context-runtime.md).
 Host adoption is tracked by the workspace review, not inferred from this package.
-Context, connection and feedback targets deliberately contain boundary markers
-only; their reducers must first pass host shadow runs.
+The feedback target still contains a boundary marker only. Each runtime block
+must pass independent host shadow runs before it controls product behavior.
 
 | Target | Responsibility | May depend on |
 | --- | --- | --- |

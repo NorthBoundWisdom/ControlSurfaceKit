@@ -20,6 +20,7 @@ let package = Package(
         .target(name: "SurfaceDeviceConformance", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState", "SurfaceFeedbackPlanning"]),
         .testTarget(name: "ArchitectureTests", dependencies: ["SurfaceDeviceConformance"]),
         .testTarget(name: "DeviceContractTests", dependencies: ["SurfaceDeviceContracts"]),
+        .testTarget(name: "ContextRuntimeTests", dependencies: ["SurfaceDeviceContracts", "SurfaceBindingContext", "SurfaceConnectionState"]),
         .testTarget(name: "ConformanceTests", dependencies: ["SurfaceDeviceContracts", "SurfaceDeviceConformance"]),
     ],
     swiftLanguageModes: [.v6]
