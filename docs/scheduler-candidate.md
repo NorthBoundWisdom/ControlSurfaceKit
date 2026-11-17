@@ -116,3 +116,7 @@ merge, whole-item key choice, planned-versus-accepted dedup, device-policy gate/
 withdrawal, native inconsistency, candidate defect or downstream alignment.
 Unit/mutation tests establish this implementation; only actual full native hook
 records establish each host's scheduling differences. They do not authorize cut.
+
+Strict persisted raw parsing and the additive already-parsed input API are
+specified in [strict JSON and parsed scheduler input](scheduler-parsed-json.md).
+The legacy Data entry remains available with its original guard/error order.

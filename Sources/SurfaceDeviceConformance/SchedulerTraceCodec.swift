@@ -186,7 +186,29 @@ public enum SchedulerTraceCodec: Sendable {
 
     public static func decodeInput(_ data: Data) throws -> SchedulerEnvelope {
         try SchedulerJSONGuard.validate(data)
-        let value = try object(JSONDecoder().decode(ScenarioPayload.self, from: data))
+        return try decodeInput(payload: JSONDecoder().decode(ScenarioPayload.self, from: data))
+    }
+
+    /// Complete raw JSON validation before a caller's own lossless AST conversion.
+    /// Does not admit the scheduler schema or return a send/scheduling decision.
+    public static func validateRawJSON(_ data: Data) throws {
+        _ = try decodePayload(data)
+    }
+
+    /// Complete strict raw JSON decoding. Scalar tokens retain the same exact
+    /// Foundation String/Double values as the legacy decoder, without NSNumber
+    /// conversion or recursive trial-decoding of containers. The returned AST
+    /// is ready for decodeInput(payload:); that semantic admission is separate.
+    public static func decodePayload(_ data: Data) throws -> ScenarioPayload {
+        try SchedulerStrictJSON.decode(data)
+    }
+
+    /// The same closed semantic parser for an already-parsed value. An AST cannot
+    /// establish raw duplicate-key/encoding/size validity: callers first validate
+    /// their original Data, then preserve every scalar type/bit/string byte.
+    public static func decodeInput(payload: ScenarioPayload) throws -> SchedulerEnvelope {
+        guard schedulerPayloadFinite(payload) else { throw SchedulerCandidateError.invalid("nonfinite input") }
+        let value = try object(payload)
         try keys(value, ["schema_version", "owner", "ordinal", "operation", "arguments", "context"])
         guard try number(value["schema_version"]) == 1 else { throw SchedulerCandidateError.invalid("version") }
         let operation = try text(value["operation"]), args = try object(value["arguments"]!)
