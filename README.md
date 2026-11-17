@@ -24,7 +24,7 @@ executable shadow/difference report.
 This is not a device driver, parameter store, business plugin, remote service,
 transport or GUI. SurfacePlugins remains the sole owner of parameter definitions,
 quantization, business plugins and consumer control-contract sessions. The two
-libraries have no dependency on each other. The host runtime joins opaque IDs;
+production libraries have no dependency on each other. The host runtime joins opaque IDs;
 there is no second parameter authority in this package.
 
 For a new device, provide stable element/endpoint identities, a protocol decoder,
@@ -34,13 +34,31 @@ Device touch/layer/motor/preset safety is mandatory adapter logic, not optional
 kernel switches. See [adapter integration](docs/new-device.md).
 
 Prepare the schema-check environment once with `python3 -m venv build/schema-validation`
-and `build/schema-validation/bin/python -m pip install jsonschema`. Run the whole
-check set with `build/schema-validation/bin/python -B scripts/check.py`. The boundary checker
-reads the evaluated SwiftPM manifest and the Swift parser AST, then applies source
-rules. Its negative fixtures are tested separately. It is a guardrail, not a proof
-of semantic purity; review and differential evidence are still required.
-CI shares the existing workspace strategy: toolchain-keyed build cache, tracked
-Git mtimes restored before compilation, one Swift build/test invocation per run.
+and `build/schema-validation/bin/python -m pip install jsonschema`. Run both checks:
+
+```sh
+build/schema-validation/bin/python -B scripts/check.py
+build/schema-validation/bin/python -B scripts/check_integration.py
+```
+
+The first command checks the production Kit graph, boundaries, unchanged scenario
+assets and unit suites. The boundary checker reads the evaluated SwiftPM manifest
+and Swift parser AST; its negative fixtures run separately. It remains a guardrail,
+not a proof of semantic purity.
+
+The second command checks two independent **test-only** graphs. Main integration
+uses current Kit plus managed SP5ff; AuthorityBridge uses managed BCR366 with its
+original SP12ba/Kit655 pins, in a separate process/scratch directory. Those older
+bridge libraries never substitute for current Kit in the device pipeline.
+Production libraries gain no cross-dependency. See [complete integration,
+identities and evidence](docs/j5-integration.md).
+
+Across both commands there are three SwiftPM graphs: Core, main integration and
+authority bridge, each with one build/test invocation and its own cache. Compiled
+executables serve every scenario; no case rebuilds a graph. CI restores keyed
+caches/mtimes, still verifies all managed sources, and runs both complete commands
+within each existing five-minute macOS/Linux job. Whole workflow time, including
+queue/cold/post-processing, must also meet the workspace budget.
 
 Hosts acquire this repository using the same managed, clean, atomically populated
 full-SHA lock mechanism as SurfacePlugins. Development checkouts are acquisition

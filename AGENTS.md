@@ -23,3 +23,11 @@ Before committing: python3 -B scripts/check_boundaries.py; python3 -B -m unittes
 discover -s scripts/tests -v; swift test --build-path build/swiftpm. Keep original
 logs and exact counts in the workspace build/j-main/k and append reports/K.md.
 No root-workspace commits, tags, Releases, fixture weakening or test skipping.
+
+The complete CI check set has both Core `build/schema-validation/bin/python -B
+scripts/check.py` and independent test graphs `build/schema-validation/bin/python
+-B scripts/check_integration.py` (prepare jsonschema as in README). Preserve the
+integration manager, checkpoint, codec and auxiliary regressions as well as the
+full original applicable scenarios. The three graphs have separate caches; old
+bridge pins do not stand in for current under-test Kit. Production library
+boundaries and all safety rules above remain unchanged.

@@ -24,7 +24,15 @@ The bridge uses empty assignments, permanent Mock source, output-observe and
 lifecycle-disabled construction, an actual throwing no-I/O device, injected
 operation times/UUID factory and counters retained through destruction. Its old
 Kit is never the tested device pipeline. No host source, lock or public API was
-changed. There is no production Kit→SP/host dependency or sixth production target.
+changed. Main SP acquisition/verification additionally compares actual Git origin
+with the approved lock and ownership marker, before considering any existing
+cache update and again before returning a source. The original copied manager
+is unchanged. Its former origin-only gap is covered by a separate real test:
+verify/ensure both reject wrong actual origin or wrong marker remote, preserving
+HEAD, tracked contents, marker, Git config and the incorrect origin unchanged;
+only the test restores its own injected changes. Four positive and four negative
+checks remain separate from the authority manager's original nine checks and the
+13 behavioral scenario controls. There is no production Kit→SP/host dependency or sixth production target.
 
 The sole business-value dictionary is production SurfaceSession's engine in the
 bridge. The main runtime only reads canonical snapshots and submits canonical

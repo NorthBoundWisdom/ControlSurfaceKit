@@ -98,6 +98,7 @@ def main():
     run('build-authority', ['swift', 'build', '--jobs', '2', '--product', 'AuthorityBridge', '--build-path', scratch], authority, {'BCR_PORTABLE_BUILD': '1'})
     run('build-main-products', ['swift', 'build', '--jobs', '2', '--build-path', scratch], main_graph)
     run('managed-boundaries', py + ['tests/managed_source_boundaries.py', '--evidence', evidence / 'managed-boundaries'], authority)
+    run('main-source-origin', py + ['tests/managed_source_origin.py', '--evidence', evidence / 'main-source-origin'], main_graph)
     run('authority-smoke', py + ['tests/smoke.py', '--bridge', bridge, '--evidence', evidence / 'authority-smoke'], authority)
     run('interactive-framing', py + ['tests/interactive_framing.py', '--bridge', bridge, '--evidence', evidence / 'interactive-framing'], authority)
     run('j3-checkpoint', py + ['tests/checkpoint.py', '--runner', binaries / 'CheckpointRunner', '--fixture', fixture, '--evidence', evidence / 'j3-checkpoint'], main_graph)
