@@ -32,24 +32,52 @@ release continuity; motor motion on connection/mode change; acknowledgments,
 readback and echo behavior; safe output ordering. None is inferred from Compact.
 No hardware was connected, no mode/preset changed and no motion command sent.
 
-## Minimal hypothetical test adapter
+## Actual J3/J4 integration work for a new adapter
 
-`Tests/ConformanceTests/MinimalDeviceAdapter.swift` contains only a knob, a button,
-a lamp, their capabilities and stateless packet↔contract translations. It owns no
-parameter values, authorization, context/connection reducer, queue or journal.
-Its tests translate three real T01 fixture operations to/from neutral values and
-check identities, payloads and display-only encoding. They do **not** execute the
-T01 parameter assertions or claim a passing shared scenario.
+Provide input-role bindings as `ContextBinding(elementID, facetID, inputKind,
+targetReferenceID)` or configuration-level `ControlBinding` when lookup is
+independent of event kind. Keep complex targets in the caller configuration;
+first-match lookup is shared. Provide explicit input/output IDs, transport
+revision, connected state and native extra identity to `ConnectionSnapshot`.
+Input epoch and mapping revision remain independent caller facts. Let the shared
+`ContextResourceIndex` own pending/sent identity, while native payload stays in
+one native owner; invalidation never invents observations or replays old plans.
 
-Current evidence is **three translated contract steps; zero complete shared
-scenarios**. Generic runtime ownership/authorization/journal/context machinery
-has not yet been extracted. Full T01–T30 execution with only this device knowledge
-cannot honestly be claimed at J-2. Motor/context/preset-specific scenarios will
-need real physical-feature applicability assessment; generic runtime scenarios
-are pending implementation, not physically not-applicable. No ideal fixture
-reducer was added to make them pass. This limitation is recorded for the next
-extraction stages instead of rewriting the fixture or weakening assertions.
+Construct immutable `FeedbackPlan` values with complete captured native evidence,
+source, origin, semantic scope, affected physical elements and full direction
+union. Supply mandatory fresh native snapshot, explicit narrowed true grant and
+mandatory native safety result. `FeedbackPreflight` performs actual admission;
+a stage-only authorization sufficiency result is not a send permit. Keep this
+device's real touch/layer/motor/pin gate at final native transmission. Actual
+receipts distinguish not-attempted/rejected/accepted; current-scope eligibility is
+separate from successful transport. No new clock/UUID is needed for these APIs.
+One cannot infer physical observed position/contact from an accepted motor send.
 
-No kernel change was required for this adapter: device facts alone fit the J-2
-contract. This establishes the vocabulary boundary only, not the complete
-"new device writes only device knowledge" runtime acceptance standard.
+## Minimal hypothetical offline device evidence
+
+The J2 translation-only example remains in
+`Tests/ConformanceTests/MinimalDeviceAdapter.swift` with its original tests.
+J5 now adds an independent [complete integration](j5-integration.md): **17 complete
+applicable scenarios, 35 applicable operations and 50 original assertions**, plus
+13 real failing regression controls. Thirteen whole scenarios and only T25's
+motor-continuity step are physically NA. The fixture and original assertions are
+unchanged. No real device was connected or qualified.
+
+Protocol/physical/receiver code is124 lines, plus67 explicit device/fixture wiring
+lines (191 total); complete caller composition and authority infrastructure are
+measured separately. The input-only knob and output-only lamp are different
+physical roles. Logical axis display→lamp projection never gives the knob display
+capability or makes T03's same-control independent-I/O feature applicable.
+Current Kit performs real binding, route/resource invalidation, plan/preflight and
+receipt logic; actual SP owns its session/actions/journal; the isolated production
+authority bridge remains the only business-value/permission/history owner. That
+provider's old Kit is separately pinned and never stands in for current Kit.
+This proves the test composition boundary; final neutral production placement of
+platform parameter authority remains outside this extraction.
+
+For One, exact packet addresses, LCD segmentation, native mode selection, touch
+continuity, reconnect/motor behavior and all final safety policy still need its
+own verified documentation and attended acquisition. The official product page
+links MIDI Mode implementation material, but this paper exercise does not claim
+unread protocol details or infer them from Compact. Shared offline results do not
+replace One-specific protocol tests and physical qualification.

@@ -18,6 +18,30 @@ jobs:
           restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
       - run: python3 -m venv build/schema-validation && build/schema-validation/bin/python -m pip install jsonschema
       - run: build/schema-validation/bin/python -B scripts/check.py
+      - uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            IntegrationAuthority/build/seed
+            IntegrationAuthority/build/swiftpm
+            IntegrationTests/build/seed
+            IntegrationTests/build/swiftpm
+          key: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-${{ github.sha }}
+          restore-keys: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-
+      - run: build/schema-validation/bin/python -B scripts/check_integration.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-${{ runner.os }}-${{ github.sha }}
+          path: build/j5-integration
+      - uses: actions/cache/save@v6.1.0
+        if: success() && github.event_name == 'push'
+        with:
+          path: |
+            IntegrationAuthority/build/seed
+            IntegrationAuthority/build/swiftpm
+            IntegrationTests/build/seed
+            IntegrationTests/build/swiftpm
+          key: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-${{ github.sha }}
       - uses: actions/cache/save@v6.1.0
         if: success() && github.event_name == 'push'
         with:
@@ -45,6 +69,30 @@ jobs:
           restore-keys: swiftpm-${{ runner.os }}-${{ env.SWIFT_ID }}-
       - run: python3 -m venv build/schema-validation && build/schema-validation/bin/python -m pip install jsonschema
       - run: build/schema-validation/bin/python -B scripts/check.py
+      - uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            IntegrationAuthority/build/seed
+            IntegrationAuthority/build/swiftpm
+            IntegrationTests/build/seed
+            IntegrationTests/build/swiftpm
+          key: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-${{ github.sha }}
+          restore-keys: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-
+      - run: build/schema-validation/bin/python -B scripts/check_integration.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-${{ runner.os }}-${{ github.sha }}
+          path: build/j5-integration
+      - uses: actions/cache/save@v6.1.0
+        if: success() && github.event_name == 'push'
+        with:
+          path: |
+            IntegrationAuthority/build/seed
+            IntegrationAuthority/build/swiftpm
+            IntegrationTests/build/seed
+            IntegrationTests/build/swiftpm
+          key: integration-v1-${{ runner.os }}-${{ env.SWIFT_ID }}-${{ hashFiles('IntegrationAuthority/configs/bcr_authority.lock.json', 'IntegrationTests/configs/surface_plugins.lock.json', 'IntegrationAuthority/configs/authority_source_manager.py') }}-${{ github.sha }}
       - uses: actions/cache/save@v6.1.0
         if: success() && github.event_name == 'push'
         with:
