@@ -11,7 +11,9 @@ actual-attempt receipts. See [feedback integration](docs/feedback-runtime.md).
 Host adoption is tracked by the workspace review, not inferred from this package.
 Each runtime block must pass independent host shadow runs before it controls
 product behavior. Rate/dedup scheduling remains native pending its separate
-executable shadow/difference report.
+executable shadow/difference report. The J-round decision keeps scheduling in
+the hosts; see [accepted scheduling differences](docs/scheduler-differences.md)
+and [comparable extraction measurements](docs/extraction-measurements.md).
 
 | Target | Responsibility | May depend on |
 | --- | --- | --- |

@@ -33,6 +33,9 @@ resource ownership; see [context integration](context-runtime.md). J-4 adds
 complete immutable plans, explicit stage/full native proof and actual receipt
 facts; see [feedback integration](feedback-runtime.md). Their implementation in
 the library does not by itself prove a host's shadow/cutover or final J5 matrix.
+The feedback checklist there specifies the adapter's payload, scope, raw evidence,
+fresh safety results, sender and exact-commit adoption proof. Scheduling stays
+native; see [accepted differences and the next extraction boundary](scheduler-differences.md).
 
 These identity/facet rules apply to J-2 neutral integration. Host adoption and
 exact pins are tracked in the supervisor's workspace review. They do not rename

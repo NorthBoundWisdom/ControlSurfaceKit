@@ -26,6 +26,14 @@ independent host shadows establish adoption.
   facts checked and their fresh current values. Snapshot equality must be pure.
   There is no optional safety/default-passed API argument or disable flag.
 
+The host also supplies the single serial owner, its existing parameter authority,
+trusted time, actual sender and receipt callbacks. Core stores none of those.
+The adapter must bind route/mode/generation changes into scope and the fresh
+native snapshot, preserve its original final transport pin and callback order,
+and invalidate pending work on generation changes without replay. Unknown
+hardware context and position stay unknown; encoding or accepting a display
+command never supplies an observation.
+
 `FeedbackPlan` adds target/affected IDs, classification, sideEffects, source and
 deliveryMode to these facts. `requiredDirections` is the full classification plus
 side-effect union. `dispatchChoice(canCoalesce:)` chooses enqueue/send only; it
@@ -119,3 +127,11 @@ Old full suites/scenarios/golden bytes and callback safety remain mandatory.
 Scheduling uses a separate test-only candidate with actual independent inputs,
 no native-state/output reseeding and explicit differences; API unit tests do not
 stand in for that execution or a host cutover/third-device acceptance result.
+
+For a new device, provide independent plan/proof/receipt comparisons, all
+applicable shared scenarios with explicit non-applicability reasons, original
+golden bytes, lifecycle zero-send and reentry/failure cases. Under the J-close
+CI layers, regression/representative comparisons and full proof must both pass
+on the exact adopted commit before a switch or delivery. See
+[the retained scheduler differences](scheduler-differences.md); rate/order/dedup
+policy is not obtained merely by adopting this feedback block.
