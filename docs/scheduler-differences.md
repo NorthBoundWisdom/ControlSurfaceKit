@@ -38,3 +38,11 @@ Sources: workspace `reports/J_CONT_DECISIONS.md`, sections “J-4调度差异的
 “两宿主J-4计划功能影子门闭合” and “C J4表示层首轮返工闭合”; candidate policy is in
 [scheduler-candidate.md](scheduler-candidate.md). Reuse measurements and their
 limits are in [extraction-measurements.md](extraction-measurements.md).
+
+## O-4 production mechanism
+
+The shared scheduling API is now defined in [scheduling-runtime.md](scheduling-runtime.md).
+It makes the request-equality phase and permission-withdrawn intent lifetime
+explicit while keeping mandatory device safety and callback order native. The
+J-round counts above remain unchanged historical observations. Adding the API
+is not host acceptance or a reclassification of previously unknown differences.

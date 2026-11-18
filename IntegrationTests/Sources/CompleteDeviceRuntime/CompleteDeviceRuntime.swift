@@ -79,8 +79,7 @@ public final class CompleteDeviceRuntime {
     private var connection: ConnectionState<EmptyConnectionIdentity>
     private var endpoint: NativeEndpoint
     private var binding: BindingContextState
-    private var pendingIndex = ContextResourceIndex<String, DispatchScope>()
-    private var pendingPlans: [String: Plan] = [:]
+    private var pending = try! FeedbackQueue<String, Plan>(rate: .unlimited)
     private var targetOwners = ContextResourceIndex<String, String>()
     private var sentIndex = ContextResourceIndex<String, DispatchScope>()
     private var sent: [String: FeedbackReceiptFact<Plan>] = [:]
@@ -288,10 +287,10 @@ public final class CompleteDeviceRuntime {
         case "publish_display": try send(makePlan(logical: string(args["element_id"]), value: scalar(args["value"]), actor: .remote), transportResult: "accepted")
         case "prepare_display":
             let logical = try string(args["element_id"]), plan = try makePlan(logical: logical, value: scalar(args["value"]), actor: .remote)
-            pendingPlans[logical] = plan; pendingIndex.upsert(logical, scope: plan.scope)
+            pending.enqueue(plan, for: logical)
         case "flush":
-            for key in try pendingIndex.removeFirst(pendingIndex.count) {
-                if let plan = pendingPlans.removeValue(forKey: key) { try send(plan, transportResult: string(args["transport_result"])) }
+            for entry in try pending.drain(at: operationTime) {
+                try send(entry.item, transportResult: string(args["transport_result"]))
             }
         case "select_software_page":
             activePage = try string(args["page"])
@@ -353,7 +352,7 @@ public final class CompleteDeviceRuntime {
         }
     }
     private func clearProjectionState() {
-        revoked += pendingIndex.removeAll(); pendingPlans.removeAll(); _ = targetOwners.removeAll(); _ = sentIndex.removeAll()
+        revoked += pending.clear(); _ = targetOwners.removeAll(); _ = sentIndex.removeAll()
     }
     private func transitionSurface(reconnect: Bool) throws {
         clearProjectionState(); epochOrdinal += 1
@@ -393,7 +392,7 @@ public final class CompleteDeviceRuntime {
         ["instance": instanceID, "source": source.rawValue, "mode": adapter.mode.rawValue,
          "logical_axis_input_role": MinimalFixtureWiring.inputRole, "logical_axis_display_role": MinimalFixtureWiring.outputRole, "knob_display_capability": try adapter.capabilities().modes.first { $0.id == adapter.mode.rawValue }!.elements.first { $0.elementID == MinimalFixtureWiring.inputRole }!.displays.isEmpty == false,
          "profile_capabilities": journal.value.profile.capabilities, "decoded_inputs": decodedRecords, "observations": observationRecords,
-         "pending": pendingIndex.orderedIDs, "revoked": revoked, "preflight_records": preflightRecords,
+         "pending": pending.orderedKeys, "revoked": revoked, "preflight_records": preflightRecords,
          "attempts": attempts.map { attempt -> [String: Any] in
              let packet = MinimalFixtureWiring.packetRecord(attempt.fact.plan.payload)
              let address = packet["address"], value = packet["value"]

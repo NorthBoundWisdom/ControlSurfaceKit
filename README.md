@@ -10,17 +10,19 @@ J-4 adds immutable feedback plans, explicit stage/full native proof validation a
 actual-attempt receipts. See [feedback integration](docs/feedback-runtime.md).
 Host adoption is tracked by the workspace review, not inferred from this package.
 Each runtime block must pass independent host shadow runs before it controls
-product behavior. Rate/dedup scheduling remains native pending its separate
-executable shadow/difference report. The J-round decision keeps scheduling in
-the hosts; see [accepted scheduling differences](docs/scheduler-differences.md)
-and [comparable extraction measurements](docs/extraction-measurements.md).
+product behavior. O-4 adds reusable queue/rate/cooldown and explicit request-equality/withdrawal
+policies; see [caller-driven scheduling](docs/scheduling-runtime.md). Host
+adoption is separate and still requires its own shadow/CI gates. The J-round
+[accepted scheduling differences](docs/scheduler-differences.md) and
+[comparable extraction measurements](docs/extraction-measurements.md) remain
+historical evidence, not a claim of host adoption.
 
 | Target | Responsibility | May depend on |
 | --- | --- | --- |
 | SurfaceDeviceContracts | Input, observation, effect and endpoint vocabulary | Foundation |
 | SurfaceBindingContext | Opaque bindings and context invalidation | Contracts |
 | SurfaceConnectionState | Caller-driven value reducer and connection generations | BindingContext |
-| SurfaceFeedbackPlanning | Immutable plans, native proof and receipts | Contracts, BindingContext, ConnectionState |
+| SurfaceFeedbackPlanning | Immutable plans, native proof, receipts and caller-driven scheduling | Contracts, BindingContext, ConnectionState |
 | SurfaceDeviceConformance | Scenario data, strict assertions and trace test support | All four, tests only |
 
 This is not a device driver, parameter store, business plugin, remote service,

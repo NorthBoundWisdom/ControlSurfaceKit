@@ -34,8 +34,12 @@ complete immutable plans, explicit stage/full native proof and actual receipt
 facts; see [feedback integration](feedback-runtime.md). Their implementation in
 the library does not by itself prove a host's shadow/cutover or final J5 matrix.
 The feedback checklist there specifies the adapter's payload, scope, raw evidence,
-fresh safety results, sender and exact-commit adoption proof. Scheduling stays
-native; see [accepted differences and the next extraction boundary](scheduler-differences.md).
+fresh safety results, sender and exact-commit adoption proof. O-4 provides [caller-driven scheduling](scheduling-runtime.md): choose a rate,
+opaque queue key/payload, request-equality phase and withdrawn-intent policy. Use
+FeedbackQueue for enqueue/flush/cancel/clear rather than implementing FIFO, bucket
+or cooldown again. Scope/generation invalidation and all final native safety
+remain adapter responsibilities. Host adoption is recorded independently; see
+[accepted differences and the extraction boundary](scheduler-differences.md).
 
 These identity/facet rules apply to J-2 neutral integration. Host adoption and
 exact pins are tracked in the supervisor's workspace review. They do not rename

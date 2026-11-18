@@ -75,6 +75,24 @@ provider's old Kit is separately pinned and never stands in for current Kit.
 This proves the test composition boundary; final neutral production placement of
 platform parameter authority remains outside this extraction.
 
+## Scheduling choices for One
+
+Use the shared FeedbackQueue with an explicitly documented rate/burst/cooldown
+from verified transport constraints; no concrete values are inferred here. A
+request that promises per-invocation acknowledgement selects proposeEveryRequest.
+A generated display cache selects suppressAfterProposal; a cache based on actual
+current-scope accepted receipts selects suppressAfterAcceptedReceipt. Start with
+discard for permission-withdrawn intent unless a documented product behavior
+requires retainLatest plus an explicit release. Choose by behavior, not by device
+name. Connection replacement always clears retained work and caches.
+
+The adapter still implements exact codec/projection, contact/layer/motor gates,
+physical observation continuity, explicit recall and final transport pinning.
+None is represented by an optional scheduling parameter. The minimal offline
+composition now uses the shared queue for deferred plans/flush/invalidation and
+adds no queue or rate algorithm in the device adapter. Original complete scenario
+assertions remain its acceptance evidence; host scheduler adoption is separate.
+
 For One, exact packet addresses, LCD segmentation, native mode selection, touch
 continuity, reconnect/motor behavior and all final safety policy still need its
 own verified documentation and attended acquisition. The official product page
