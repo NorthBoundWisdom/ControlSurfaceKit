@@ -60,14 +60,16 @@ release/cancel/clear. Neither policy releases work automatically. Lifecycle
 `clear` always discards all cached and retained state. No policy is an optional
 touch/layer/motor gate.
 
-## Host choices and acceptance
+## Proposed host choices and acceptance
 
-The BCR adapter selects `proposeEveryRequest` and `discard`, preserving an actual
+BCR's proposed use of `proposeEveryRequest` and `discard` preserves a native
 admission/transport receipt and callback for every synchronous invocation. Its
-callback linearization remains native. Compact's generated nonmotor caches use
-`suppressAfterProposal`; desired feedback, redraw relationships and ordering,
-physical observations and all contact/layer/motor policies remain native. A
-successful-receipt policy is distinct from both and remains available explicitly.
+callback linearization remains native. Compact's proposed choice for generated
+nonmotor caches is `suppressAfterProposal`. Its desired feedback, redraw
+relationships, ordering, physical observations and contact/layer/motor policies
+remain native. Each host must preserve its evidenced intent lifetime on
+permission withdrawal. See the [One paper policy](new-device-example.md#proposed-scheduling-policy-for-one)
+for an example of using `suppressAfterAcceptedReceipt` for display repaint.
 
 The minimal hypothetical device's `CompleteDeviceRuntime` now uses the shared
 queue for deferred immutable plans, flush and invalidation, with `.unlimited`.
