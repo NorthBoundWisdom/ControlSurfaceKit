@@ -34,7 +34,7 @@ scope eligibility and callback order, without filling missing evidence or
 introducing a second parameter authority. Do not change existing published
 contract semantics as a side effect of scheduler extraction.
 
-Sources: workspace `reports/J_CONT_DECISIONS.md`, sections “J-4调度差异的监督裁定与原始格式返工范围”,
+Sources: workspace `archive/reports/J/J_CONT_DECISIONS.md`, sections “J-4调度差异的监督裁定与原始格式返工范围”,
 “两宿主J-4计划功能影子门闭合” and “C J4表示层首轮返工闭合”; candidate policy is in
 [scheduler-candidate.md](scheduler-candidate.md). Reuse measurements and their
 limits are in [extraction-measurements.md](extraction-measurements.md).
